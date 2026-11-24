@@ -1,87 +1,31 @@
-from abc import ABC, abstractmethod
+def uppercase_decorator(func):
+    def wrapper(*args, **kwargs):
+        result = func(*args, **kwargs)
+        return result.upper()  # Convert result to uppercase
+    return wrapper
 
 
-# Strategy Interface
-class PaymentStrategy(ABC):
+class Report:
+    def __init__(self, title):
+        self.title = title
 
-    @abstractmethod
-    def pay(self, amount):
-        pass
+    @classmethod
+    def from_template(cls, template):
+        return cls(template)  # Create object from a template string
 
+    def __str__(self):
+        return f"Report Title: {self.title}"
 
-# Concrete Strategy 1
-class CreditCardPayment(PaymentStrategy):
-
-    def pay(self, amount):
-        print(f"Payment of ₹{amount} made using Credit Card.")
-
-
-# Concrete Strategy 2
-class DebitCardPayment(PaymentStrategy):
-
-    def pay(self, amount):
-        print(f"Payment of ₹{amount} made using Debit Card.")
+    @uppercase_decorator
+    def generate(self):
+        return f"This is the report: {self.title}"
 
 
-# Concrete Strategy 3
-class UpiPayment(PaymentStrategy):
+# Create object using class method
+report = Report.from_template("Annual Sales Report")
 
-    def pay(self, amount):
-        print(f"Payment of ₹{amount} made using UPI.")
+# Print object (calls __str__)
+print(report)
 
-
-# Context Class
-class PaymentProcessor:
-
-    def _init_(self):
-        self.strategy = None
-
-    def set_payment_strategy(self, strategy):
-        self.strategy = strategy
-
-    def process_payment(self, amount):
-
-        if self.strategy is None:
-            print("Please select a payment method first.")
-        else:
-            self.strategy.pay(amount)
-
-
-def main():
-
-    processor = PaymentProcessor()
-
-    while True:
-
-        print("\n========== PAYMENT MENU ==========")
-        print("1. Credit Card")
-        print("2. Debit Card")
-        print("3. UPI")
-        print("4. Exit")
-
-        choice = input("Enter your choice: ")
-
-        if choice == "4":
-            print("Thank You!")
-            break
-
-        amount = float(input("Enter Payment Amount: "))
-
-        if choice == "1":
-            processor.set_payment_strategy(CreditCardPayment())
-
-        elif choice == "2":
-            processor.set_payment_strategy(DebitCardPayment())
-
-        elif choice == "3":
-            processor.set_payment_strategy(UpiPayment())
-
-        else:
-            print("Invalid Choice!")
-            continue
-
-        processor.process_payment(amount)
-
-
-if _name_ == "_main_":
-    main()
+# Generate report (decorator converts output to uppercase)
+print(report.generate())
