@@ -1,11 +1,18 @@
-import csv
+import re
 
-with open("students.csv", "w", newline="") as file:
-    writer = csv.writer(file)
+with open("input.txt", "r") as file:
+    text = file.read()
 
-    writer.writerow(["Name", "Age", "Course"])
-    writer.writerow(["Rahul", 20, "BTech"])
-    writer.writerow(["Priya", 21, "BCA"])
-    writer.writerow(["Amit", 19, "BTech"])
+pattern = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b'
 
-print("CSV file created")
+emails = re.findall(pattern, text)
+emails = list(dict.fromkeys(emails))
+print("Email addresses found:")
+
+for email in emails:
+    print(email)
+
+print("Total emails found:", len(emails))
+
+with open("output.txt", "w") as file:
+    file.write("\n".join(emails))
