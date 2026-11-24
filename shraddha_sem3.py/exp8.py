@@ -1,16 +1,19 @@
-import csv
-import json
+# Read data from the input file
+with open("input.txt", "r") as file:
+    lines = file.readlines()
 
-# convert csv to json
-input_file = "students.csv"
-output_file = "students.json"
+# Count the total number of lines
+print("Total number of lines:", len(lines))
 
-with open(input_file, "r", newline="") as csv_file:
-    csv_reader = csv.DictReader(csv_file)
-    data = list(csv_reader)
+# Extract the first two lines
+first_two_lines = lines[:2]
 
-with open(output_file, "w" ) as json_file:
-    json.dump(data, json_file, indent=4)
+print("\nFirst two lines:")
+for line in first_two_lines:
+    print(line, end="")
 
-print(f"CSV file '{input_file}' converted to JSON file '{output_file}' successfully!")
-print("JESON file created:", output_file)
+# Write the extracted lines into a new file
+with open("output.txt", "w") as file:
+    file.writelines(first_two_lines)
+
+print("\n\nData written to output.txt successfully.")
