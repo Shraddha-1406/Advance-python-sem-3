@@ -1,23 +1,22 @@
 import pandas as pd
 import numpy as np
 
-data = {
-    'Name': ['Aarav', 'Diya', 'Rahul', None, 'Priya'],
-    'Age': [20, np.nan, 25, 22, np.nan],
-    'Weight': [60, np.nan, 70, 65, 55],
-    'Blood Pressure': [120, 130, np.nan, 125, 115]
-}
+# Create a Series containing 10 random numbers
+s = pd.Series(np.random.randint(1, 100, 10))
 
-df = pd.DataFrame(data)
+print("Original Series:")
+print(s)
 
-print("Original DataFrame:")
-print(df)
+# Indexing
+print("\nElement at index 3:")
+print(s[3])
 
-df['Age'] = df['Age'].fillna(df['Age'].mean())
-df['Weight'] = df['Weight'].fillna(df['Weight'].mean())
-df['Blood Pressure'] = df['Blood Pressure'].fillna(df['Blood Pressure'].mean())
+# Filtering
+print("\nNumbers greater than 50:")
+print(s[s > 50])
 
-df = df[df['Name'].notnull()]
-
-print("\nUpdated DataFrame:")
-print(df)
+# Statistical operations
+print("\nMean:", s.mean())
+print("Median:", s.median())
+print("Minimum:", s.min())
+print("Maximum:", s.max())
