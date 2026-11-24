@@ -1,59 +1,80 @@
-# Strategy Pattern - Configurable Payment Processing System
+from abc import ABC, abstractmethod
 
-# Strategy Interface
-class PaymentStrategy:
+
+class PaymentStrategy(ABC):
+
+    @abstractmethod
     def pay(self, amount):
         pass
 
 
-# Concrete Strategy 1
 class CreditCardPayment(PaymentStrategy):
+
     def pay(self, amount):
-        print(f"Paid ₹{amount} using Credit Card")
+        print("Payment of Rs.", amount, "made using Credit Card.")
 
 
-# Concrete Strategy 2
-class PayPalPayment(PaymentStrategy):
+class DebitCardPayment(PaymentStrategy):
+
     def pay(self, amount):
-        print(f"Paid ₹{amount} using PayPal")
+        print("Payment of Rs.", amount, "made using Debit Card.")
 
 
-# Concrete Strategy 3
-class UPIPayment(PaymentStrategy):
+class UpiPayment(PaymentStrategy):
+
     def pay(self, amount):
-        print(f"Paid ₹{amount} using UPI")
+        print("Payment of Rs.", amount, "made using UPI.")
 
 
-# Context Class
-class PaymentContext:
-    def __init__(self, strategy):
+class PaymentProcessor:
+
+    def __init__(self):
+        self.strategy = None
+
+    def set_payment_strategy(self, strategy):
         self.strategy = strategy
 
-    def set_strategy(self, strategy):
-        self.strategy = strategy
+    def process_payment(self, amount):
 
-    def pay(self, amount):
-        self.strategy.pay(amount)
+        if self.strategy is None:
+            print("Please select a payment method first.")
+        else:
+            self.strategy.pay(amount)
 
 
-# Main Program
-print("Payment Methods")
-print("1. Credit Card")
-print("2. PayPal")
-print("3. UPI")
+def main():
 
-choice = int(input("Enter your choice: "))
-amount = float(input("Enter payment amount: ₹"))
+    processor = PaymentProcessor()
 
-if choice == 1:
-    strategy = CreditCardPayment()
-elif choice == 2:
-    strategy = PayPalPayment()
-elif choice == 3:
-    strategy = UPIPayment()
-else:
-    print("Invalid Choice!")
-    exit()
+    while True:
 
-payment = PaymentContext(strategy)
-payment.pay(amount)
+        print("\n1. Credit Card")
+        print("2. Debit Card")
+        print("3. UPI")
+        print("4. Exit")
+
+        choice = input("Enter choice: ")
+
+        if choice == "1":
+            processor.set_payment_strategy(CreditCardPayment())
+
+        elif choice == "2":
+            processor.set_payment_strategy(DebitCardPayment())
+
+        elif choice == "3":
+            processor.set_payment_strategy(UpiPayment())
+
+        elif choice == "4":
+            print("Thank You!")
+            break
+
+        else:
+            print("Invalid choice")
+            continue
+
+        amount = float(input("Enter amount: "))
+        processor.process_payment(amount)
+
+
+if __name__ == "__main__":
+    main()
