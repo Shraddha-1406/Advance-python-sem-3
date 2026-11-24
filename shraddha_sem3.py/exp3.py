@@ -1,106 +1,59 @@
-from functools import wraps
+# Strategy Pattern - Configurable Payment Processing System
 
-# Decorator to format report output
-def report_decorator(func):
-    @wraps(func)
-    def wrapper(*args, **kwargs):
-        print("\n" + "=" * 50)
-        print("        DYNAMIC REPORT GENERATOR")
-        print("=" * 50)
-        result = func(*args, **kwargs)
-        print("=" * 50)
-        return result
-    return wrapper
+# Strategy Interface
+class PaymentStrategy:
+    def pay(self, amount):
+        pass
 
 
-class Report:
-
-    default_title = "Untitled Report"
-
-    def _init_(self, title, content):
-        self.title = title
-        self.content = content
-
-    # Magic Method
-    def _str_(self):
-        return f"\nTitle : {self.title}\nContent : {self.content}"
-
-    # Magic Method
-    def _len_(self):
-        return len(self.content)
-
-    # Class Method
-    @classmethod
-    def create_default_report(cls):
-        return cls(cls.default_title, "This is the default report content.")
-
-    @report_decorator
-    def display(self):
-        print(self)
+# Concrete Strategy 1
+class CreditCardPayment(PaymentStrategy):
+    def pay(self, amount):
+        print(f"Paid ₹{amount} using Credit Card")
 
 
-def main():
-
-    reports = []
-
-    while True:
-
-        print("\n========== MENU ==========")
-        print("1. Create New Report")
-        print("2. Create Default Report")
-        print("3. Display All Reports")
-        print("4. Show Report Length")
-        print("5. Exit")
-
-        choice = input("Enter your choice: ")
-
-        if choice == "1":
-
-            title = input("Enter Report Title: ")
-            content = input("Enter Report Content: ")
-
-            report = Report(title, content)
-            reports.append(report)
-
-            print("\nReport Created Successfully!")
-
-        elif choice == "2":
-
-            report = Report.create_default_report()
-            reports.append(report)
-
-            print("\nDefault Report Created Successfully!")
-
-        elif choice == "3":
-
-            if len(reports) == 0:
-                print("\nNo Reports Available.")
-
-            else:
-
-                for i, report in enumerate(reports, start=1):
-                    print(f"\nReport {i}")
-                    report.display()
-
-        elif choice == "4":
-
-            if len(reports) == 0:
-                print("\nNo Reports Available.")
-
-            else:
-
-                for i, report in enumerate(reports, start=1):
-                    print(f"\nReport {i} Length = {len(report)} characters")
-
-        elif choice == "5":
-
-            print("\nThank You!")
-            break
-
-        else:
-
-            print("\nInvalid Choice!")
+# Concrete Strategy 2
+class PayPalPayment(PaymentStrategy):
+    def pay(self, amount):
+        print(f"Paid ₹{amount} using PayPal")
 
 
-if _name_ == "_main_":
-    main()
+# Concrete Strategy 3
+class UPIPayment(PaymentStrategy):
+    def pay(self, amount):
+        print(f"Paid ₹{amount} using UPI")
+
+
+# Context Class
+class PaymentContext:
+    def __init__(self, strategy):
+        self.strategy = strategy
+
+    def set_strategy(self, strategy):
+        self.strategy = strategy
+
+    def pay(self, amount):
+        self.strategy.pay(amount)
+
+
+# Main Program
+print("Payment Methods")
+print("1. Credit Card")
+print("2. PayPal")
+print("3. UPI")
+
+choice = int(input("Enter your choice: "))
+amount = float(input("Enter payment amount: ₹"))
+
+if choice == 1:
+    strategy = CreditCardPayment()
+elif choice == 2:
+    strategy = PayPalPayment()
+elif choice == 3:
+    strategy = UPIPayment()
+else:
+    print("Invalid Choice!")
+    exit()
+
+payment = PaymentContext(strategy)
+payment.pay(amount)
