@@ -1,31 +1,88 @@
-def uppercase_decorator(func):
-    def wrapper(*args, **kwargs):
-        result = func(*args, **kwargs)
-        return result.upper()  # Convert result to uppercase
+# Dynamic Report Generator
+
+def format_report(func):
+    def wrapper(self, *args):
+        print("\n------------------------------")
+        print(self.title)
+        print("------------------------------")
+        func(self, *args)
+        print("------------------------------")
     return wrapper
 
 
 class Report:
-    def __init__(self, title):
+
+    def __init__(self, title, data):
         self.title = title
+        self.data = data
 
-    @classmethod
-    def from_template(cls, template):
-        return cls(template)  # Create object from a template string
-
+    # Magic method
     def __str__(self):
-        return f"Report Title: {self.title}"
+        return "Report Name: " + self.title
 
-    @uppercase_decorator
-    def generate(self):
-        return f"This is the report: {self.title}"
+    # Class method
+    @classmethod
+    def create_report(cls, title, data):
+        return cls(title, data)
+
+    # Decorator
+    @format_report
+    def generate_report(self, style="normal"):
+
+        if style == "normal":
+            for key, value in self.data.items():
+                print(key, ":", value)
+
+        elif style == "upper":
+            for key, value in self.data.items():
+                print(key.upper(), ":", str(value).upper())
+
+        elif style == "simple":
+            for key, value in self.data.items():
+                print(key, "=", value)
+
+        else:
+            print("Invalid format!")
 
 
-# Create object using class method
-report = Report.from_template("Annual Sales Report")
+def main():
 
-# Print object (calls __str__)
-print(report)
+    data = {
+        "Name": "Anjali",
+        "Branch": "CSE",
+        "Marks": 85,
+        "Grade": "A"
+    }
 
-# Generate report (decorator converts output to uppercase)
-print(report.generate())
+    report = Report.create_report("Student Report", data)
+
+    print(report)
+
+    while True:
+
+        print("\n1. Normal Format")
+        print("2. Uppercase Format")
+        print("3. Simple Format")
+        print("4. Exit")
+
+        choice = input("Enter your choice: ")
+
+        if choice == "1":
+            report.generate_report("normal")
+
+        elif choice == "2":
+            report.generate_report("upper")
+
+        elif choice == "3":
+            report.generate_report("simple")
+
+        elif choice == "4":
+            print("Thank You!")
+            break
+
+        else:
+            print("Invalid choice")
+
+
+if __name__ == "__main__":
+    main()
