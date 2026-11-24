@@ -1,15 +1,17 @@
-import re
+import csv
+import json
 
-text = """
-hello student!
-for any queries, contact abc@gmail.com or teacher@gmail.com
-you can also contact support@gmail.com
-"""
-email_pattern = r'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}'
+# Read data from the CSV file
+with open("input.csv", "r", newline="") as file:
+    reader = csv.DictReader(file)
+    data = list(reader)
 
-emails = re.findall(email_pattern, text)
+# Convert CSV data into JSON format
+json_data = json.dumps(data, indent=4)
 
-print("Email addresses found: ")
+# Write JSON data into the output file
+with open("output.json", "w") as file:
+    file.write(json_data)
 
-for email in emails :
-    print(email)
+print("CSV data converted into JSON successfully!")
+print("Total records converted:", len(data))
