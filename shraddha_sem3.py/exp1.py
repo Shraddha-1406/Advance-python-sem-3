@@ -1,119 +1,57 @@
 class Book:
-    def _init_(self, book_id, title, author):
-        self.book_id = book_id
+    def __init__(self, title, author):
         self.title = title
         self.author = author
-        self.is_borrowed = True #Book is available by default
-
-    def display(self):
-        status = "Borrowed" if self.is_borrowed else "Available"
-        print(f"ID: {self.book_id}, Title: {self.title}, Author: {self.author}, Status: {status}")
+        self.available = True   # Book is available by default
 
 
+# Patron class
 class Patron:
-    def _init_(self, patron_id, name):
-        self.patron_id = patron_id
+    def __init__(self, name):
         self.name = name
-        self.borrowed_books = [] # List to store Borrowed Book
-
-    def display(self):
-        print(f"Patron ID: {self.patron_id}, Name: {self.name}")
-        if self.borrowed_books:
-            print("Borrowed Books:", ", ".join(self.borrowed_books))
-        else:
-            print("No books borrowed.")
+        self.borrowed_books = []   # List to store borrowed books
 
 
+# Library class
 class Library:
-    def _init_(self):
-        self.books = {}
-        self.patrons = {}
+    def __init__(self):
+        self.books = []
+        self.patrons = []
 
-    # Add a new book
     def add_book(self, book):
-        self.books[book.book_id] = book
-        print(f"Book '{book.title}' added successfully.")
+        self.books.append(book)   # Add book to library
 
-    # Register a new patron
     def register_patron(self, patron):
-        self.patrons[patron.patron_id] = patron
-        print(f"Patron '{patron.name}' registered successfully.")
+        self.patrons.append(patron)   # Register a new patron
 
-    # Borrow a book
-    def borrow_book(self, patron_id, book_id):
-        if patron_id not in self.patrons:
-            print("Patron not found.")
-            return
-
-        if book_id not in self.books:
-            print("Book not found.")
-            return
-
-        book = self.books[book_id]
-        patron = self.patrons[patron_id]
-
-        if book.is_borrowed:
-            print(f"Book '{book.title}' is already borrowed.")
+    def borrow_book(self, patron, book):
+        if book.available:
+            book.available = False
+            patron.borrowed_books.append(book)   # Assign book to patron
+            print(f"{patron.name} borrowed '{book.title}'")
         else:
-            book.is_borrowed = True
-            patron.borrowed_books.append(book.title)
-            print(f"{patron.name} borrowed '{book.title}'.")
+            print(f"'{book.title}' is not available.")
 
-    # Return a book
-    def return_book(self, patron_id, book_id):
-        if patron_id not in self.patrons or book_id not in self.books:
-            print("Invalid Patron ID or Book ID.")
-            return
-
-        book = self.books[book_id]
-        patron = self.patrons[patron_id]
-
-        if book.title in patron.borrowed_books:
-            patron.borrowed_books.remove(book.title)
-            book.is_borrowed = False
-            print(f"{patron.name} returned '{book.title}'.")
+    def return_book(self, patron, book):
+        if book in patron.borrowed_books:
+            book.available = True
+            patron.borrowed_books.remove(book)
+            print(f"{patron.name} returned '{book.title}'")
         else:
-            print(f"{patron.name} has not borrowed '{book.title}'.")
-
-    # Display all books
-    def display_books(self):
-        print("\nLibrary Books:")
-        for book in self.books.values():
-            book.display()
-
-    # Display all patrons
-    def display_patrons(self):
-        print("\nRegistered Patrons:")
-        for patron in self.patrons.values():
-            patron.display()
+            print(f"{patron.name} has not borrowed '{book.title}'")
 
 
-# ---------------- Main Program ----------------
-
+# Example usage
 library = Library()
 
-# Add books
-library.add_book(Book(101, "Python Programming", "Guido van Rossum"))
-library.add_book(Book(102, "Data Structures", "Mark Allen Weiss"))
-library.add_book(Book(103, "Artificial Intelligence", "Stuart Russell"))
+book1 = Book("Python Basics", "John Smith")
+book2 = Book("Data Structures", "Jane Doe")
 
-# Register patrons
-library.register_patron(Patron(1, "Alice"))
-library.register_patron(Patron(2, "Bob"))
+library.add_book(book1)
+library.add_book(book2)
 
-# Display books
-library.display_books()
+patron1 = Patron("Alice")
+library.register_patron(patron1)
 
-# Borrow books
-library.borrow_book(1, 101)
-library.borrow_book(2, 102)
-
-# Display updated books
-library.display_books()
-
-# Return a book
-library.return_book(1, 101)
-
-# Display final status
-library.display_books()
-library.display_patrons()
+library.borrow_book(patron1, book1)
+library.return_book(patron1, book1)
