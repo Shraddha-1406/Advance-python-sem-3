@@ -1,54 +1,45 @@
-# Assignment No 14 …Name class roll no
-# Step 1: Import the logging module
 import logging
 
-# Step 2: Configure logging
-# The program will save log messages in a file named app.log.
-# DEBUG level allows all five standard severity levels to be recorded.
-# The format includes time, severity, and message.
+# Configure logging
 logging.basicConfig(
- filename="app.log",
- level=logging.DEBUG,
- format="%(asctime)s - %(levelname)s - %(message)s",
- force=True
+    filename="app.log",
+    level=logging.DEBUG,
+    format="%(asctime)s - %(levelname)s - %(message)s"
 )
 
-# Step 3: Define a function to divide two numbers
-def divide_numbers(a, b):
- # Record that the function has started
- logging.info("Division function started")
+def divide(a, b):
+    logging.debug("Division function started")
 
- # Record the input values for debugging
- logging.debug("Values received: a=%s, b=%s", a, b)
+    try:
+        result = a / b
+        logging.info("Division performed successfully")
+        logging.debug("Result is %s", result)
+        return result
 
- try:
- # Step 4: Perform division
- result = a / b
+    except ZeroDivisionError:
+        logging.exception("Error occurred: Division by zero")
+        return None
 
- # Step 5: Record successful execution
- logging.info("Division successful")
+def main():
+    logging.info("Program execution started")
 
- # Return the calculated result
- return result
+    try:
+        a = 10
+        b = 2
 
- except ZeroDivisionError:
- # Step 6: Record the exception if b is zero
- logging.exception("Cannot divide by zero")
+        logging.debug("Input values: a=%s, b=%s", a, b)
 
- # Return None to indicate failure
- return None
+        result = divide(a, b)
+        print("Result:", result)
 
-# Step 7: Record that the program has started
-logging.info("Program started")
+        # Exception example
+        divide(10, 0)
 
-# Step 8: Call the function with valid input
-print("Result:", divide_numbers(10, 2))
+    except Exception:
+        logging.exception("Unexpected error occurred")
 
-# Step 9: Call the function with invalid input
-print("Result:", divide_numbers(10, 0))
+    finally:
+        logging.info("Program execution completed")
 
-# Step 10: Record that the program has finished
-logging.info("Program finished")
-
-# Step 11: Print a message on the screen
-print("Check app.log for execution details.")
+if __name__ == "__main__":
+    main()
