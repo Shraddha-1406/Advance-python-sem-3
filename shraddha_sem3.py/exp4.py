@@ -1,51 +1,43 @@
-def fibonacci_tabulation(n):
-    if n < 0:
-        raise ValueError("Number must be non-negative")
-
+def fibonacci_memo(n, memo={}):
+    
     if n <= 1:
         return n
-
-    dp = [0] * (n + 1)
-    dp[0] = 0
-    dp[1] = 1
-
-    for i in range(2, n + 1):
-        dp[i] = dp[i - 1] + dp[i - 2]
-
-    return dp[n]
-
-
-def fibonacci_memoization(n, memo=None):
-    if n < 0:
-        raise ValueError("Number must be non-negative")
-
-    if memo is None:
-        memo = {}
 
     if n in memo:
         return memo[n]
 
-    if n <= 1:
-        return n
-
-    memo[n] = (
-        fibonacci_memoization(n - 1, memo)
-        + fibonacci_memoization(n - 2, memo)
-    )
+    memo[n] = fibonacci_memo(n - 1, memo) + fibonacci_memo(n - 2, memo)
 
     return memo[n]
 
 
-# Main Program
-try:
+def fibonacci_tabulation(n):
+
+    if n <= 1:
+        return n
+
+    fib = [0] * (n + 1)
+
+    fib[0] = 0
+    fib[1] = 1
+
+    for i in range(2, n + 1):
+        fib[i] = fib[i - 1] + fib[i - 2]
+
+    return fib[n]
+
+
+def main():
+
     n = int(input("Enter the value of n: "))
 
-    tabulation_result = fibonacci_tabulation(n)
-    memoization_result = fibonacci_memoization(n)
+    print("\nUsing Memoization:")
+    print("Fibonacci =", fibonacci_memo(n))
 
-    print("\n--- Fibonacci Results ---")
-    print("Using Tabulation (Bottom-Up):", tabulation_result)
-    print("Using Memoization (Top-Down):", memoization_result)
+    print("\nUsing Tabulation:")
+    print("Fibonacci =", fibonacci_tabulation(n))
 
-except ValueError as e:
-    print("Error:", e)
+
+if __name__ == "__main__":
+    main()
+    
