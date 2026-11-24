@@ -1,41 +1,37 @@
-# assignment code for 13 
-# Step 1: Import the threading module
-# It helps us create and manage multiple threads.
 import threading
-# Step 2: Define the first task
-def task1():
- # Print messages to show that Task 1 is running
- for i in range(1, 4):
- print("Task 1 - Counting:", i)
+import time
 
-# Step 3: Define the second task
-def task2():
- # Print messages to show that Task 2 is running
- for i in range(1, 4):
- print("Task 2 - Counting:", i)
+# Task 1: Print numbers
+def print_numbers():
+    for i in range(1, 6):
+        print("Number:", i)
+        time.sleep(1)
 
-# Step 4: Define the third task
-def task3():
- # Print messages to show that Task 3 is running
- for i in range(1, 4):
- print("Task 3 - Counting:", i)
+# Task 2: Print letters
+def print_letters():
+    for letter in 'ABCDE':
+        print("Letter:", letter)
+        time.sleep(1)
 
-# Step 5: Create separate threads for the three tasks
-t1 = threading.Thread(target=task1)
-t2 = threading.Thread(target=task2)
-t3 = threading.Thread(target=task3)
+# Task 3: Print messages
+def print_messages():
+    for i in range(1, 6):
+        print("Message:", i)
+        time.sleep(1)
 
-# Step 6: Start all threads
-# start() allows each thread to begin execution.
+# Creating multiple threads
+t1 = threading.Thread(target=print_numbers)
+t2 = threading.Thread(target=print_letters)
+t3 = threading.Thread(target=print_messages)
+
+# Starting threads
 t1.start()
 t2.start()
 t3.start()
 
-# Step 7: Wait until all threads finish
-# join() prevents the main program from finishing too early.
+# Waiting for all threads to complete
 t1.join()
 t2.join()
 t3.join()
 
-# Step 8: Print the final message
-print("All tasks completed!")
+print("All tasks completed.")
